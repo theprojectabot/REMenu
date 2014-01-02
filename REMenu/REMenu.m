@@ -38,6 +38,9 @@
 @property (strong, readwrite, nonatomic) UIView *menuView;
 @property (strong, readwrite, nonatomic) UIView *menuWrapperView;
 @property (strong, readwrite, nonatomic) REMenuContainerView *containerView;
+
+@property (strong, readwrite, nonatomic) UIScrollView *scrollView;
+
 @property (strong, readwrite, nonatomic) UIButton *backgroundButton;
 @property (assign, readwrite, nonatomic) BOOL isOpen;
 @property (assign, readwrite, nonatomic) BOOL isAnimating;
@@ -249,7 +252,14 @@
     [self.menuWrapperView addSubview:self.menuView];
     [self.containerView addSubview:self.backgroundButton];
     [self.containerView addSubview:self.menuWrapperView];
-    [view addSubview:self.containerView];
+    
+    self.scrollView = ({
+        UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, 470)];
+        scrollView.contentSize = self.containerView.bounds.size;
+        scrollView;
+    });
+    [self.scrollView addSubview:self.containerView];
+    [view addSubview:self.scrollView];
     
     // Animate appearance
     //
