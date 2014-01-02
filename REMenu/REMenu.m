@@ -369,6 +369,7 @@
             [self.backgroundButton removeFromSuperview];
             [self.backgroundView removeFromSuperview];
             [self.containerView removeFromSuperview];
+            [self.scrollView removeFromSuperview];
             
             if (completion)
             {
