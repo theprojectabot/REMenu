@@ -177,27 +177,48 @@
     
     // Append new item views to REMenuView
     //
+    CGFloat currentYOffset = 0.0f;
+    
     for (REMenuItem *item in self.items) {
         NSInteger index = [self.items indexOfObject:item];
         
+        
         CGFloat itemHeight = self.itemHeight;
+        if(item.itemHeight)
+            itemHeight = item.itemHeight;
         if (index == self.items.count - 1)
             itemHeight += self.cornerRadius;
         
+        
         UIView *separatorView = [[UIView alloc] initWithFrame:CGRectMake(0,
-                                                                         index * self.itemHeight + index * self.separatorHeight + 40.0 + navigationBarOffset,
+                                                                         currentYOffset + index * self.separatorHeight + 40.0 + navigationBarOffset,
                                                                          rect.size.width,
                                                                          self.separatorHeight)];
+        
+        //        UIView *separatorView = [[UIView alloc] initWithFrame:CGRectMake(0,
+        //                                                                         index * itemHeight + index * self.separatorHeight + 40.0 + navigationBarOffset,
+        //                                                                         rect.size.width,
+        //                                                                         self.separatorHeight)];
         separatorView.backgroundColor = self.separatorColor;
         separatorView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         [self.menuView addSubview:separatorView];
         
         REMenuItemView *itemView = [[REMenuItemView alloc] initWithFrame:CGRectMake(0,
-                                                                                    index * self.itemHeight + (index + 1.0) * self.separatorHeight + 40.0 + navigationBarOffset,
+                                                                                    currentYOffset + (index + 1.0) * self.separatorHeight + 40.0 + navigationBarOffset,
                                                                                     rect.size.width,
                                                                                     itemHeight)
                                                                     menu:self
                                                              hasSubtitle:item.subtitle.length > 0];
+        
+        //        REMenuItemView *itemView = [[REMenuItemView alloc] initWithFrame:CGRectMake(0,
+        //                                                                                    index * itemHeight + (index + 1.0) * self.separatorHeight + 40.0 + navigationBarOffset,
+        //                                                                                    rect.size.width,
+        //                                                                                    itemHeight)
+        //                                                                    menu:self
+        //                                                             hasSubtitle:item.subtitle.length > 0];
+        
+        currentYOffset = currentYOffset + itemView.bounds.size.height + separatorView.bounds.size.height;
+        
         itemView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         itemView.item = item;
         item.itemView = itemView;
