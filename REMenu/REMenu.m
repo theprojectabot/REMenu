@@ -234,6 +234,8 @@
         [self.menuView addSubview:itemView];
     }
     
+    self.yOffsetAndLastHeight = currentYOffset + self.itemHeight;
+    
     // Set up frames
     //
     self.menuWrapperView.frame = CGRectMake(0, -self.combinedHeight - navigationBarOffset, rect.size.width, self.combinedHeight + navigationBarOffset);
@@ -241,7 +243,8 @@
     if (REUIKitIsFlatMode() && self.liveBlur) {
         self.toolbar.frame = self.menuWrapperView.bounds;
     }
-    self.containerView.frame = CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);
+    //self.containerView.frame = CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);
+    self.containerView.frame = CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, self.menuWrapperView.bounds.size.height);
     self.backgroundButton.frame = self.containerView.bounds;
     
     // Add subviews
@@ -255,7 +258,7 @@
     
     self.scrollView = ({
         UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, 470)];
-        scrollView.contentSize = self.containerView.bounds.size;
+        scrollView.contentSize = CGSizeMake(CGRectGetWidth(self.containerView.bounds), [self combinedHeight] + navigationBarOffset);
         scrollView;
     });
     [self.scrollView addSubview:self.containerView];
@@ -404,7 +407,8 @@
 
 - (CGFloat)combinedHeight
 {
-    return self.items.count * self.itemHeight + self.items.count  * self.separatorHeight + 40.0 + self.cornerRadius;
+    return self.yOffsetAndLastHeight;
+ //   return self.items.count * self.itemHeight + self.items.count  * self.separatorHeight + 40.0 + self.cornerRadius;
 }
 
 - (void)setNeedsLayout

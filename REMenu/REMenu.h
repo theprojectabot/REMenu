@@ -53,6 +53,8 @@ typedef NS_ENUM(NSInteger, REMenuLiveBackgroundStyle) {
 @property (copy, readwrite, nonatomic) void (^closeCompletionHandler)(void);
 @property (assign, readwrite, nonatomic) BOOL closeOnSelection;
 
+@property (assign, readwrite, nonatomic) CGFloat yOffsetAndLastHeight;
+
 // Style
 //
 @property (assign, readwrite, nonatomic) CGFloat cornerRadius;
