@@ -407,7 +407,10 @@
 
 - (CGFloat)combinedHeight
 {
-    return self.yOffsetAndLastHeight+ 20; //   return self.items.count * self.itemHeight + self.items.count  * self.separatorHeight + 40.0 + self.cornerRadius;
+    CGFloat navigationBarOffset = self.appearsBehindNavigationBar && self.navigationBar ? 64 : 0;
+    return self.yOffsetAndLastHeight + navigationBarOffset;
+    
+//    return self.yOffsetAndLastHeight+ 20; //   return self.items.count * self.itemHeight + self.items.count  * self.separatorHeight + 40.0 + self.cornerRadius;
 }
 
 - (void)setNeedsLayout
