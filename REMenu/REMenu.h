@@ -41,7 +41,10 @@ typedef NS_ENUM(NSInteger, REMenuLiveBackgroundStyle) {
     REMenuLiveBackgroundStyleDark
 };
 
-@interface REMenu : NSObject 
+@interface REMenu : NSObject
+
+@property (strong, readwrite, nonatomic) UIScrollView *scrollView;
+
 
 // Data
 //
