@@ -58,7 +58,7 @@
         self.imageAlignment = REMenuImageAlignmentLeft;
         self.closeOnSelection = YES;
         self.itemHeight = 48.0;
-        self.separatorHeight = 2.0;
+        self.separatorHeight = 1.0;
         self.waitUntilAnimationIsComplete = YES;
         
         self.textOffset = CGSizeMake(0, 0);
@@ -189,8 +189,8 @@
         CGFloat itemHeight = self.itemHeight;
         if(item.itemHeight)
             itemHeight = item.itemHeight;
-        if (index == self.items.count - 1)
-            itemHeight += self.cornerRadius;
+        //if (index == self.items.count - 1)
+        //    itemHeight += self.cornerRadius;
         
         
         UIView *separatorView = [[UIView alloc] initWithFrame:CGRectMake(0,
@@ -232,9 +232,11 @@
             [itemView addSubview:item.customView];
         }
         [self.menuView addSubview:itemView];
+        
+        self.yOffsetAndLastHeight = currentYOffset;// + self.itemHeight;
     }
     
-    self.yOffsetAndLastHeight = currentYOffset + self.itemHeight;
+    
     
     // Set up frames
     //
@@ -257,8 +259,8 @@
     [self.containerView addSubview:self.menuWrapperView];
     
     self.scrollView = ({
-        UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, 300)];
-        scrollView.contentSize = CGSizeMake(CGRectGetWidth(self.containerView.bounds), [self combinedHeight] + navigationBarOffset);
+        UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, 295)];
+        scrollView.contentSize = CGSizeMake(CGRectGetWidth(self.containerView.bounds), [self combinedHeight] + navigationBarOffset );
         scrollView;
     });
     [self.scrollView addSubview:self.containerView];
