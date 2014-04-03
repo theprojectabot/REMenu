@@ -259,7 +259,11 @@
     [self.containerView addSubview:self.menuWrapperView];
     
     self.scrollView = ({
-        UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, 295)];
+        UIScrollView *scrollView;
+        if(self.reduceHangingEnd == YES)
+            scrollView= [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, 215)];
+        else
+            scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, 295)];
         scrollView.contentSize = CGSizeMake(CGRectGetWidth(self.containerView.bounds), [self combinedHeight] + navigationBarOffset );
         scrollView;
     });
