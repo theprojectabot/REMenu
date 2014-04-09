@@ -113,6 +113,9 @@
     self.isOpen = YES;
     self.isAnimating = YES;
     
+    self.yOffsetAndLastHeight = 0.0f;
+    
+    float sliderBarOffset = 40.0f;
     // Create views
     //
     self.containerView = ({
@@ -181,46 +184,39 @@
     // Append new item views to REMenuView
     //
     CGFloat currentYOffset = 0.0f;
+    CGFloat combinedStartingOffset = sliderBarOffset;
     
-    for (REMenuItem *item in self.items) {
-        NSInteger index = [self.items indexOfObject:item];
-        
-        
+    for (int i = 0; i < self.items.count; i++) {
+        //NSInteger index = [self.items indexOfObject:item];
+        NSInteger index = i;
+        REMenuItem *item = [self.items objectAtIndex:index];
         CGFloat itemHeight = self.itemHeight;
         if(item.itemHeight)
             itemHeight = item.itemHeight;
-        //if (index == self.items.count - 1)
-        //    itemHeight += self.cornerRadius;
+        //        if (index == self.items.count - 1)
+        //            itemHeight += self.cornerRadius + item.itemHeight;
         
         
-        UIView *separatorView = [[UIView alloc] initWithFrame:CGRectMake(0,
-                                                                         currentYOffset + index * self.separatorHeight + 40.0 + navigationBarOffset,
-                                                                         rect.size.width,
-                                                                         self.separatorHeight)];
-        
-        //        UIView *separatorView = [[UIView alloc] initWithFrame:CGRectMake(0,
-        //                                                                         index * itemHeight + index * self.separatorHeight + 40.0 + navigationBarOffset,
-        //                                                                         rect.size.width,
-        //                                                                         self.separatorHeight)];
-        separatorView.backgroundColor = self.separatorColor;
-        separatorView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        [self.menuView addSubview:separatorView];
         
         REMenuItemView *itemView = [[REMenuItemView alloc] initWithFrame:CGRectMake(0,
-                                                                                    currentYOffset + (index + 1.0) * self.separatorHeight + 40.0 + navigationBarOffset,
+                                                                                    currentYOffset+ combinedStartingOffset + (( (index + 1.0) * self.separatorHeight) ),
                                                                                     rect.size.width,
                                                                                     itemHeight)
                                                                     menu:self
                                                              hasSubtitle:item.subtitle.length > 0];
         
-        //        REMenuItemView *itemView = [[REMenuItemView alloc] initWithFrame:CGRectMake(0,
-        //                                                                                    index * itemHeight + (index + 1.0) * self.separatorHeight + 40.0 + navigationBarOffset,
-        //                                                                                    rect.size.width,
-        //                                                                                    itemHeight)
-        //                                                                    menu:self
-        //                                                             hasSubtitle:item.subtitle.length > 0];
+        UIView *separatorView = [[UIView alloc] initWithFrame:CGRectMake(0,
+                                                                         currentYOffset + combinedStartingOffset+ (index * self.separatorHeight ),
+                                                                         rect.size.width,
+                                                                         self.separatorHeight)];
         
-        currentYOffset = currentYOffset + itemView.bounds.size.height + separatorView.bounds.size.height;
+        separatorView.backgroundColor = self.separatorColor;
+        separatorView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        [self.menuView addSubview:separatorView];
+        
+        
+        
+        currentYOffset = currentYOffset + itemHeight + self.separatorHeight;//+ (index + self.separatorHeight );
         
         itemView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         itemView.item = item;
@@ -233,14 +229,15 @@
         }
         [self.menuView addSubview:itemView];
         
-        self.yOffsetAndLastHeight = currentYOffset;// + self.itemHeight;
+        
     }
+    self.yOffsetAndLastHeight = currentYOffset + sliderBarOffset + self.items.count;
     
-    
+    //self.yOffsetAndLastHeight += 64;
     
     // Set up frames
     //
-    self.menuWrapperView.frame = CGRectMake(0, -self.combinedHeight - navigationBarOffset, rect.size.width, self.combinedHeight + navigationBarOffset);
+    self.menuWrapperView.frame = CGRectMake(0, -self.combinedHeight - navigationBarOffset , rect.size.width, self.combinedHeight);
     self.menuView.frame = self.menuWrapperView.bounds;
     if (REUIKitIsFlatMode() && self.liveBlur) {
         self.toolbar.frame = self.menuWrapperView.bounds;
@@ -261,10 +258,10 @@
     self.scrollView = ({
         UIScrollView *scrollView;
         if(self.reduceHangingEnd == YES)
-            scrollView= [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, 215)];
+            scrollView= [[UIScrollView alloc] initWithFrame:CGRectMake(0, navigationBarOffset, 320, 295)];
         else
-            scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, 295)];
-        scrollView.contentSize = CGSizeMake(CGRectGetWidth(self.containerView.bounds), [self combinedHeight] + navigationBarOffset );
+            scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, navigationBarOffset , 320, 295)];
+        scrollView.contentSize = CGSizeMake(CGRectGetWidth(self.containerView.bounds), [self combinedHeight] );
         scrollView;
     });
     [self.scrollView addSubview:self.containerView];
@@ -288,7 +285,7 @@
              {
                  self.backgroundView.alpha = 1.0;
                  CGRect frame = self.menuView.frame;
-                 frame.origin.y = -40.0 - self.separatorHeight;
+                 frame.origin.y = -sliderBarOffset - self.separatorHeight;
                  self.menuWrapperView.frame = frame;
              }
                              completion:^(BOOL finished)
@@ -304,7 +301,7 @@
              {
                  self.backgroundView.alpha = 1.0;
                  CGRect frame = self.menuView.frame;
-                 frame.origin.y = -40.0 - self.separatorHeight;
+                 frame.origin.y = -sliderBarOffset - self.separatorHeight;
                  self.menuWrapperView.frame = frame;
              }
                              completion:^(BOOL finished)
@@ -323,7 +320,7 @@
          {
              self.backgroundView.alpha = 1.0;
              CGRect frame = self.menuView.frame;
-             frame.origin.y = -40.0 - self.separatorHeight;
+             frame.origin.y = -sliderBarOffset - self.separatorHeight;
              self.menuWrapperView.frame = frame;
          }
                          completion:^(BOOL finished)
@@ -415,8 +412,9 @@
 
 - (CGFloat)combinedHeight
 {
+    float sliderBarOffset = 40.0f;
     CGFloat navigationBarOffset = self.appearsBehindNavigationBar && self.navigationBar ? 64 : 0;
-    return self.yOffsetAndLastHeight + navigationBarOffset;
+    return self.yOffsetAndLastHeight;
     //   return self.items.count * self.itemHeight + self.items.count  * self.separatorHeight + 40.0 + self.cornerRadius;
 }
 
